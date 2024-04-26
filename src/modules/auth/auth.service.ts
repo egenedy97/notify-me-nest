@@ -1,5 +1,5 @@
 import {
-  ConflictException,
+  UnauthorizedException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -8,25 +8,28 @@ import { UserRepository } from '../user/user.repository';
 import { IUser } from '../user/user.interface';
 import { User, userRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
-import { DataStoredInToken, TokenData } from './interfaces';
-import jwt from 'jsonwebtoken';
+import { DataStoredInToken } from './interfaces';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private jwtService: JwtService,
+  ) {}
 
   async register(user: IUser): Promise<User> {
     try {
       const findUser = await this.userRepository.findUserWithEmail(user.email);
       if (findUser) {
-        throw new ConflictException('This email is already in use');
+        throw new UnauthorizedException('This email is already in use');
       }
       return await this.userRepository.createUser(user);
     } catch (error) {
       if (error.response) {
         // Handling Axios error response
         throw new HttpException(error.response.data, error.response.status);
-      } else if (error instanceof ConflictException) {
+      } else if (error instanceof UnauthorizedException) {
         // Handling specific exception
         throw error;
       } else {
@@ -52,7 +55,7 @@ export class AuthService {
     try {
       const findUser = await this.userRepository.findUserWithEmail(user.email);
       if (!findUser) {
-        throw new ConflictException('User not found');
+        throw new UnauthorizedException('User not found');
       }
 
       const isPasswordMatching: boolean = await bcrypt.compare(
@@ -60,13 +63,13 @@ export class AuthService {
         findUser.password,
       );
       if (!isPasswordMatching) {
-        throw new ConflictException('Incorrect password');
+        throw new UnauthorizedException('Incorrect password');
       }
 
-      const { token } = this.createToken(findUser.id);
+      const token = await this.createToken(findUser.id);
 
       return {
-        token,
+        token: token,
         user: {
           name: findUser.name,
           email: findUser.email,
@@ -79,7 +82,7 @@ export class AuthService {
       if (error.response) {
         // Handling Axios error response
         throw new HttpException(error.response.data, error.response.status);
-      } else if (error instanceof ConflictException) {
+      } else if (error instanceof UnauthorizedException) {
         // Handling specific exception
         throw error;
       } else {
@@ -92,14 +95,8 @@ export class AuthService {
     }
   }
 
-  public createToken(id: number): TokenData {
+  async createToken(id: number): Promise<string> {
     const dataStoredInToken: DataStoredInToken = { id: id };
-    const secretKey: string = process.env.SECRET_KEY;
-    const expiresIn: number = 4 * 60 * 60 * 1000;
-
-    return {
-      expiresIn,
-      token: jwt.sign(dataStoredInToken, secretKey, { expiresIn }),
-    };
+    return this.jwtService.signAsync(dataStoredInToken);
   }
 }
