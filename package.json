@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npx env-cmd -f ./config/.env.development nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "npx env-cmd -f ./config/.env.development nest start",
     "start:dev": "npx env-cmd -f ./config/.env.development nest start --watch",
     "start:debug": "npx env-cmd -f ./config/.env.development nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -24,6 +24,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^9.4.3",
     "@nestjs/swagger": "^7.3.1",
     "@prisma/client": "^5.12.1",
