@@ -63,4 +63,19 @@ export class UserRepository {
       },
     });
   }
+
+  async deleteUser(id: string): Promise<User> {
+    return await this.prisma.user.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+  }
+
+  async getAllUsers(skip: number, take: number): Promise<User[]> {
+    return await this.prisma.user.findMany({
+      skip,
+      take,
+    });
+  }
 }
