@@ -1,5 +1,3 @@
-// user.guard.ts
-
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { userRole } from '@prisma/client';
@@ -11,11 +9,10 @@ export class UserGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<userRole[]>('roles', context.getHandler());
     if (!roles) {
-      return true;
+      return false;
     }
     const request = context.switchToHttp().getRequest();
-    const role: userRole = request.user.role;
-
-    return roles.includes(role) && role === userRole.USER;
+    const role: userRole = request.currentUser.role;
+    return roles.includes(role);
   }
 }

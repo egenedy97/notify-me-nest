@@ -12,6 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(helmet());
   app.enableCors();
+  app.setGlobalPrefix('v1');
 
   const pkg = JSON.parse(
     await promises.readFile(join('.', 'package.json'), 'utf8'),
@@ -23,8 +24,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup(`api/`, app, document);
-
-  app.setGlobalPrefix('v1');
 
   await app.listen(process.env.PORT || 4000);
 }
