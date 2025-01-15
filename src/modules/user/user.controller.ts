@@ -15,7 +15,7 @@ import { JwtGuard } from '../../guards/jwt.guard';
 
 import { User } from '@prisma/client';
 import { CurrentUser } from '../../decorators/currentUser-decorator';
-import { updateUserDto } from './DTO';
+import { updateUserDto } from './dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserGuard } from 'src/guards/user.guard';
 
