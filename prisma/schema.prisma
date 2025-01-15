@@ -18,11 +18,41 @@ enum userRole {
   ADMIN
 }
 
+enum notificationStatus {
+  FIRED
+  PENDING
+  RUNNING
+  FAILED
+}
+
+enum notificationType {
+  whatsapp
+  call
+  email
+  sms
+}
+
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  name     String
-  phone    String   @unique
-  role     userRole @default(USER)
-  password String
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String
+  phone        String         @unique
+  role         userRole       @default(USER)
+  password     String
+  Notification Notification[]
+}
+
+model Notification {
+  id         Int                @id @default(autoincrement())
+  type       notificationType   @default(email)
+  userId     Int
+  createdBy  User               @relation(fields: [userId], references: [id])
+  status     notificationStatus @default(PENDING)
+  firingTime DateTime
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  title      String             @default("")
+  message    String             @db.LongText()
+  phone      String
+  email      String
 }
