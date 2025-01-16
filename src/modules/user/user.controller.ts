@@ -15,7 +15,7 @@ import { JwtGuard } from '../../guards/jwt.guard';
 
 import { User } from '@prisma/client';
 import { CurrentUser } from '../../decorators/currentUser-decorator';
-import { updateUserDto } from './dto';
+import { UpdateUserDto } from './dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserGuard } from 'src/guards/user.guard';
 
@@ -59,7 +59,7 @@ export class UserController {
   @Roles('ADMIN')
   async updateUser(
     @Param('id') id: string,
-    @Body() updateUserDto: updateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     const updatedUser = await this.userService.updateUser(id, updateUserDto);
     if (!updatedUser) {
