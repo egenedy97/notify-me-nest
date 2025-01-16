@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(helmet());
   app.enableCors();
-  app.setGlobalPrefix('v1');
+  app.setGlobalPrefix('api/v1');
 
   const pkg = JSON.parse(
     await promises.readFile(join('.', 'package.json'), 'utf8'),
