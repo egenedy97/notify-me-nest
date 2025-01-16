@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { user } from '@prisma/client';
 import { PrismaService } from '../../providers/prisma.service';
 import { IUser } from './interface/user.interface';
 import * as bcrypt from 'bcryptjs';
@@ -14,7 +14,7 @@ export class UserRepository {
     phone,
     role,
     password,
-  }: IUser): Promise<User> {
+  }: IUser): Promise<user> {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.prisma.user.create({
@@ -29,7 +29,7 @@ export class UserRepository {
     return user;
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<user> {
     return await this.prisma.user.findUnique({
       where: {
         id: parseInt(id),
@@ -37,7 +37,7 @@ export class UserRepository {
     });
   }
 
-  async findUserWithEmail(email: string): Promise<Partial<User>> {
+  async findUserWithEmail(email: string): Promise<Partial<user>> {
     return await this.prisma.user.findFirst({
       where: {
         email,
@@ -45,7 +45,7 @@ export class UserRepository {
     });
   }
 
-  async findUserWithPhone(phone: string): Promise<Partial<User>> {
+  async findUserWithPhone(phone: string): Promise<Partial<user>> {
     return await this.prisma.user.findFirst({
       where: {
         phone,
@@ -53,7 +53,7 @@ export class UserRepository {
     });
   }
 
-  async updateUser(id: string, data: Partial<IUser>): Promise<User> {
+  async updateUser(id: string, data: Partial<IUser>): Promise<user> {
     return await this.prisma.user.update({
       where: {
         id: parseInt(id),
@@ -64,7 +64,7 @@ export class UserRepository {
     });
   }
 
-  async deleteUser(id: string): Promise<User> {
+  async deleteUser(id: string): Promise<user> {
     return await this.prisma.user.delete({
       where: {
         id: parseInt(id),
@@ -72,7 +72,7 @@ export class UserRepository {
     });
   }
 
-  async getAllUsers(skip: number, take: number): Promise<User[]> {
+  async getAllUsers(skip: number, take: number): Promise<user[]> {
     return await this.prisma.user.findMany({
       skip,
       take,

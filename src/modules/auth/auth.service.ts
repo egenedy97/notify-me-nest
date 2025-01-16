@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { UserRepository } from '../user/user.repository';
 import { IUser } from '../user/interface/user.interface';
-import { User, userRole } from '@prisma/client';
+import { user, userRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { DataStoredInToken } from './interface';
 import { JwtService } from '@nestjs/jwt';
@@ -18,7 +18,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(user: IUser): Promise<User> {
+  async register(user: IUser): Promise<user> {
     try {
       const findUser = await this.userRepository.findUserWithEmail(user.email);
       if (findUser) {
