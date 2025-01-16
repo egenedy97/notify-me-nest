@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { User } from '@prisma/client';
+import { user } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -13,7 +13,7 @@ export class UserService {
     return await this.userRepository.getAllUsers(skip, take);
   }
 
-  async updateUser(id: string, updateUserDto: Partial<User>) {
+  async updateUser(id: string, updateUserDto: Partial<user>) {
     return await this.userRepository.updateUser(id, updateUserDto);
   }
 

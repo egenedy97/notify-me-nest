@@ -13,9 +13,9 @@ import {
 import { UserService } from './user.service';
 import { JwtGuard } from '../../guards/jwt.guard';
 
-import { User } from '@prisma/client';
+import { user } from '@prisma/client';
 import { CurrentUser } from '../../decorators/currentUser-decorator';
-import { updateUserDto } from './DTO';
+import { UpdateUserDto } from './dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserGuard } from 'src/guards/user.guard';
 
@@ -25,7 +25,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @Roles('ADMIN', 'USER')
   @Get('/whoami')
-  whoAmI(@CurrentUser() user: User) {
+  whoAmI(@CurrentUser() user: user) {
     return user;
   }
   @Roles('ADMIN')
@@ -59,7 +59,7 @@ export class UserController {
   @Roles('ADMIN')
   async updateUser(
     @Param('id') id: string,
-    @Body() updateUserDto: updateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     const updatedUser = await this.userService.updateUser(id, updateUserDto);
     if (!updatedUser) {

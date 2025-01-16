@@ -5,20 +5,20 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { UserRepository } from '../user/user.repository';
-import { IUser } from '../user/user.interface';
-import { User, userRole } from '@prisma/client';
+import { IUser } from '../user/interface/user.interface';
+import { user, userRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
-import { DataStoredInToken } from './interfaces';
+import { DataStoredInToken } from './interface';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userRepository: UserRepository,
-    private jwtService: JwtService,
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async register(user: IUser): Promise<User> {
+  async register(user: IUser): Promise<user> {
     try {
       const findUser = await this.userRepository.findUserWithEmail(user.email);
       if (findUser) {

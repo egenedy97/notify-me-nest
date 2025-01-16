@@ -1,6 +1,6 @@
 import { UserRepository } from './user.repository';
 import { PrismaService } from '../../providers/prisma.service';
-import { IUser } from './user.interface';
+import { IUser } from './interface/user.interface';
 import { User, userRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 

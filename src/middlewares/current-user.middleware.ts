@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { User } from '@prisma/client';
+import { user } from '@prisma/client';
 import { UserService } from '../modules/user/user.service';
 import * as jwt from 'jsonwebtoken';
 
@@ -8,17 +8,17 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
-      currentUser?: User;
+      currentUser?: user;
     }
   }
 }
 
 @Injectable()
 export class CurrentUserMiddleware implements NestMiddleware {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
   async use(req: Request, res: Response, next: NextFunction) {
-    const authHeader = req.headers['authorization'];
-    if (authHeader && authHeader.startsWith('Bearer ')) {
+    const authHeader = req.headers['authorization'] || '';
+    if (authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
 
       try {
