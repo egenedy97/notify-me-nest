@@ -32,21 +32,21 @@ enum notificationType {
   sms
 }
 
-model User {
+model user {
   id           Int            @id @default(autoincrement())
   email        String         @unique
   name         String
   phone        String         @unique
   role         userRole       @default(USER)
   password     String
-  Notification Notification[]
+  Notification notification[]
 }
 
-model Notification {
+model notification {
   id         Int                @id @default(autoincrement())
   type       notificationType   @default(email)
   userId     Int
-  createdBy  User               @relation(fields: [userId], references: [id])
+  createdBy  user               @relation(fields: [userId], references: [id])
   status     notificationStatus @default(PENDING)
   firingTime DateTime
   createdAt  DateTime           @default(now())
