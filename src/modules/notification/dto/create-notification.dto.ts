@@ -13,10 +13,6 @@ export class NotificationCreationDto {
   @IsNotEmpty()
   type: notificationType;
 
-  @IsEnum(notificationStatus, { message: 'Invalid notification status' })
-  @IsOptional()
-  status?: notificationStatus = notificationStatus.PENDING;
-
   @IsNotEmpty({ message: 'Firing time is required' })
   @IsDateString(
     {},
